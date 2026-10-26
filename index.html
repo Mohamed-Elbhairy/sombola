@@ -17,10 +17,23 @@
       --accent: #b5651d;
       --accent-dark: #8a4a12;
       --line: #eadfce;
+      --crust: #d79a52;
+      --crust-dark: #a8662a;
+      --cream: #f6e2b8;
+      --choc: #5a3220;
+      --ok: #1f7a3d;
+      --closed: #a32a2a;
       --radius: 14px;
     }
 
     * { box-sizing: border-box; }
+    [hidden] { display: none !important; }
+
+    html { scroll-behavior: smooth; }
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      * { transition: none !important; }
+    }
 
     body {
       margin: 0;
@@ -29,6 +42,7 @@
       color: var(--text);
       line-height: 1.7;
     }
+    body.has-cart { padding-bottom: 96px; }
 
     .wrap {
       max-width: 820px;
@@ -36,21 +50,49 @@
       padding: 0 16px;
     }
 
+    :focus-visible {
+      outline: 3px solid var(--accent-dark);
+      outline-offset: 2px;
+    }
+
     /* الهيدر */
     header {
       background: linear-gradient(160deg, #e9c48f 0%, #d79a52 100%);
       text-align: center;
-      padding: 56px 0 48px;
+      padding: 40px 0 44px;
     }
+    .hero-art { width: 72px; height: 72px; margin-bottom: 4px; }
     header h1 {
       margin: 0;
       font-size: 2.2rem;
       font-weight: 800;
     }
     .tagline {
-      margin: 8px 0 24px;
+      margin: 8px 0 16px;
       font-size: 1.15rem;
     }
+    .status {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255, 255, 255, 0.85);
+      border-radius: 999px;
+      padding: 4px 14px;
+      font-weight: 600;
+      font-size: 0.95rem;
+      margin-bottom: 20px;
+    }
+    .status::before {
+      content: "";
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--muted);
+    }
+    .status.open::before { background: var(--ok); }
+    .status.closed::before { background: var(--closed); }
+    .status:empty { display: none; }
+
     .btn {
       display: inline-block;
       background: var(--text);
@@ -61,6 +103,7 @@
       border-radius: 999px;
     }
     .btn:hover, .btn:focus-visible { background: var(--accent-dark); }
+    .header-cta { display: block; width: fit-content; margin: 0 auto; }
 
     /* الأقسام */
     section { padding: 40px 0 8px; }
@@ -70,6 +113,30 @@
       color: var(--accent-dark);
     }
     .about { font-size: 1.1rem; margin: 0; }
+
+    /* الفلتر */
+    .filters {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+    .filter {
+      font: inherit;
+      font-weight: 600;
+      min-height: 44px;
+      padding: 6px 18px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: var(--surface);
+      color: var(--text);
+      cursor: pointer;
+    }
+    .filter[aria-pressed="true"] {
+      background: var(--text);
+      border-color: var(--text);
+      color: #fff;
+    }
 
     /* المنتجات */
     .products {
@@ -85,19 +152,44 @@
       border: 1px solid var(--line);
       border-radius: var(--radius);
       padding: 16px;
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      gap: 12px;
+      display: grid;
+      grid-template-columns: 64px 1fr;
+      gap: 4px 14px;
+      align-items: start;
     }
-    .product h3 { margin: 0; font-size: 1.1rem; }
+    .product .art { width: 64px; height: 64px; grid-row: span 2; }
+    .product h3 { margin: 0; font-size: 1.1rem; line-height: 1.4; }
     .unit { color: var(--muted); font-size: 0.95rem; }
     .note { display: block; color: var(--muted); font-size: 0.9rem; }
+    .buy {
+      grid-column: 2;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-top: 8px;
+    }
     .price {
       font-weight: 800;
       color: var(--accent);
       white-space: nowrap;
     }
+    .qty { display: inline-flex; align-items: center; gap: 4px; }
+    .qty button {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      border: 1px solid var(--line);
+      background: var(--bg);
+      color: var(--text);
+      font: inherit;
+      font-size: 1.4rem;
+      line-height: 1;
+      cursor: pointer;
+    }
+    .qty button.add { background: var(--text); border-color: var(--text); color: #fff; }
+    .qty button:disabled { opacity: 0.35; cursor: default; }
+    .qty output { min-width: 28px; text-align: center; font-weight: 800; }
 
     /* المواعيد والتواصل */
     .card {
@@ -126,6 +218,40 @@
     footer p { margin: 4px 0; }
     .disclaimer { font-size: 0.85rem; }
 
+    /* شريط السلة */
+    .cart-bar {
+      position: fixed;
+      inset-inline: 0;
+      bottom: 0;
+      background: var(--text);
+      color: #fff;
+      padding: 12px 16px calc(12px + env(safe-area-inset-bottom));
+      box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.2);
+    }
+    .cart-inner {
+      max-width: 820px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    .cart-total { font-weight: 800; font-size: 1.1rem; }
+    .cart-count { font-size: 0.9rem; opacity: 0.85; }
+    .cart-msg { display: block; font-size: 0.85rem; color: #ffd9a3; }
+    .cart-clear {
+      font: inherit;
+      font-weight: 600;
+      min-height: 44px;
+      padding: 6px 18px;
+      border-radius: 999px;
+      border: 1px solid #fff;
+      background: transparent;
+      color: #fff;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
     @media (min-width: 640px) {
       header h1 { font-size: 3rem; }
       .products { grid-template-columns: 1fr 1fr; }
@@ -136,9 +262,21 @@
 
   <header>
     <div class="wrap">
+      <!-- سنبلة قمح -->
+      <svg class="hero-art" viewBox="0 0 64 64" aria-hidden="true">
+        <path d="M32 60V26" stroke="#8a4a12" stroke-width="3" stroke-linecap="round" fill="none"/>
+        <g fill="#fbf6ee" stroke="#8a4a12" stroke-width="2">
+          <ellipse cx="32" cy="10" rx="5" ry="8"/>
+          <ellipse cx="23" cy="22" rx="5" ry="8" transform="rotate(-30 23 22)"/>
+          <ellipse cx="41" cy="22" rx="5" ry="8" transform="rotate(30 41 22)"/>
+          <ellipse cx="24" cy="38" rx="5" ry="8" transform="rotate(-30 24 38)"/>
+          <ellipse cx="40" cy="38" rx="5" ry="8" transform="rotate(30 40 38)"/>
+        </g>
+      </svg>
       <h1>مخبز السنبلة</h1>
       <p class="tagline">عيش وحلويات طازة كل يوم، من فرننا لبيتك.</p>
-      <a class="btn" href="tel:01000000000">اتصل بينا</a>
+      <p class="status" id="status" role="status"></p>
+      <a class="btn header-cta" href="tel:01000000000">اتصل بينا</a>
     </div>
   </header>
 
@@ -151,34 +289,73 @@
 
     <section>
       <h2>المنتجات والأسعار</h2>
-      <ul class="products">
-        <li class="product">
+
+      <div class="filters" role="group" aria-label="تصفية المنتجات">
+        <button class="filter" type="button" data-filter="all" aria-pressed="true">الكل</button>
+        <button class="filter" type="button" data-filter="bread" aria-pressed="false">عيش</button>
+        <button class="filter" type="button" data-filter="pastry" aria-pressed="false">معجنات</button>
+        <button class="filter" type="button" data-filter="sweet" aria-pressed="false">حلويات</button>
+      </div>
+
+      <ul class="products" id="products">
+        <li class="product" data-id="fino" data-cat="bread" data-price="15">
+          <svg class="art" viewBox="0 0 64 64" aria-hidden="true">
+            <rect x="6" y="22" width="52" height="24" rx="12" fill="#d79a52" stroke="#a8662a" stroke-width="2"/>
+            <path d="M18 26l6 16M30 25l6 18M42 26l6 16" stroke="#f6e2b8" stroke-width="3" stroke-linecap="round"/>
+          </svg>
           <div><h3>عيش فينو</h3><span class="unit">5 أرغفة</span></div>
-          <span class="price">15 جنيه</span>
+          <div class="buy"><span class="price">15 جنيه</span></div>
         </li>
-        <li class="product">
+        <li class="product" data-id="baladi" data-cat="bread" data-price="10">
+          <svg class="art" viewBox="0 0 64 64" aria-hidden="true">
+            <circle cx="32" cy="32" r="24" fill="#c98a4a" stroke="#8a4a12" stroke-width="2"/>
+            <circle cx="32" cy="32" r="16" fill="none" stroke="#e8c188" stroke-width="2" stroke-dasharray="4 5"/>
+            <circle cx="26" cy="28" r="1.8" fill="#8a4a12"/><circle cx="38" cy="30" r="1.8" fill="#8a4a12"/>
+            <circle cx="31" cy="38" r="1.8" fill="#8a4a12"/>
+          </svg>
           <div><h3>عيش بلدي مخصوص</h3><span class="unit">5 أرغفة</span></div>
-          <span class="price">10 جنيه</span>
+          <div class="buy"><span class="price">10 جنيه</span></div>
         </li>
-        <li class="product">
+        <li class="product" data-id="croissant" data-cat="pastry" data-price="20">
+          <svg class="art" viewBox="0 0 64 64" aria-hidden="true">
+            <path d="M6 42c2-16 14-26 26-26s24 10 26 26c-6-4-10-4-14 0-4-6-8-6-12-6s-8 0-12 6c-4-4-8-4-14 0z" fill="#e0a35a" stroke="#a8662a" stroke-width="2" stroke-linejoin="round"/>
+            <path d="M24 20l-4 14M32 17v16M40 20l4 14" stroke="#a8662a" stroke-width="2" stroke-linecap="round"/>
+          </svg>
           <div><h3>كرواسون سادة</h3><span class="unit">القطعة</span></div>
-          <span class="price">20 جنيه</span>
+          <div class="buy"><span class="price">20 جنيه</span></div>
         </li>
-        <li class="product">
+        <li class="product" data-id="croissant-choc" data-cat="pastry" data-price="28">
+          <svg class="art" viewBox="0 0 64 64" aria-hidden="true">
+            <path d="M6 42c2-16 14-26 26-26s24 10 26 26c-6-4-10-4-14 0-4-6-8-6-12-6s-8 0-12 6c-4-4-8-4-14 0z" fill="#e0a35a" stroke="#a8662a" stroke-width="2" stroke-linejoin="round"/>
+            <path d="M18 30c6-8 22-8 28 0" stroke="#5a3220" stroke-width="5" stroke-linecap="round" fill="none"/>
+            <path d="M24 38l-3 5M32 36v6M40 38l3 5" stroke="#5a3220" stroke-width="3" stroke-linecap="round"/>
+          </svg>
           <div><h3>كرواسون شوكولاتة</h3><span class="unit">القطعة</span></div>
-          <span class="price">28 جنيه</span>
+          <div class="buy"><span class="price">28 جنيه</span></div>
         </li>
-        <li class="product">
+        <li class="product" data-id="basbousa" data-cat="sweet" data-price="160">
+          <svg class="art" viewBox="0 0 64 64" aria-hidden="true">
+            <rect x="10" y="14" width="44" height="40" rx="4" fill="#e9b04a" stroke="#a8662a" stroke-width="2"/>
+            <path d="M10 34h44M32 14v40" stroke="#a8662a" stroke-width="1.5"/>
+            <circle cx="21" cy="24" r="4" fill="#f6e2b8"/><circle cx="43" cy="24" r="4" fill="#f6e2b8"/>
+            <circle cx="21" cy="44" r="4" fill="#f6e2b8"/><circle cx="43" cy="44" r="4" fill="#f6e2b8"/>
+          </svg>
           <div><h3>بسبوسة</h3><span class="unit">الكيلو</span></div>
-          <span class="price">160 جنيه</span>
+          <div class="buy"><span class="price">160 جنيه</span></div>
         </li>
-        <li class="product">
+        <li class="product" data-id="cake" data-cat="sweet" data-price="450" data-from="true">
+          <svg class="art" viewBox="0 0 64 64" aria-hidden="true">
+            <rect x="10" y="30" width="44" height="24" rx="4" fill="#f6e2b8" stroke="#a8662a" stroke-width="2"/>
+            <path d="M10 38c6 6 10-2 14 4s10-6 14 2 10-6 16 2" stroke="#b5651d" stroke-width="3" fill="none" stroke-linecap="round"/>
+            <path d="M24 30v-8M32 30v-8M40 30v-8" stroke="#8a4a12" stroke-width="2" stroke-linecap="round"/>
+            <path d="M24 16c-2 3 2 4 0 6M32 16c-2 3 2 4 0 6M40 16c-2 3 2 4 0 6" stroke="#d79a52" stroke-width="3" stroke-linecap="round" fill="none"/>
+          </svg>
           <div>
             <h3>تورتة عيد ميلاد</h3>
             <span class="unit">حسب الطلب</span>
             <span class="note">بالحجز قبلها بيومين</span>
           </div>
-          <span class="price">من 450 جنيه</span>
+          <div class="buy"><span class="price">من 450 جنيه</span></div>
         </li>
       </ul>
     </section>
@@ -207,6 +384,135 @@
     <p>مخبز السنبلة</p>
     <p class="disclaimer">بيانات خيالية للتدريب: المخبز والعنوان والرقم مش حقيقيين.</p>
   </footer>
+
+  <div class="cart-bar" id="cart" hidden>
+    <div class="cart-inner">
+      <div aria-live="polite">
+        <span class="cart-total" id="cart-total"></span>
+        <span class="cart-count" id="cart-count"></span>
+        <span class="cart-msg" id="cart-msg"></span>
+      </div>
+      <button class="cart-clear" id="cart-clear" type="button">مسح السلة</button>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      var MIN_ORDER = 100;
+
+      /* ---------- الفلتر ---------- */
+      var filters = document.querySelectorAll(".filter");
+      var items = document.querySelectorAll(".product");
+
+      filters.forEach(function (btn) {
+        btn.addEventListener("click", function () {
+          var cat = btn.dataset.filter;
+          filters.forEach(function (b) {
+            b.setAttribute("aria-pressed", b === btn ? "true" : "false");
+          });
+          items.forEach(function (li) {
+            li.hidden = cat !== "all" && li.dataset.cat !== cat;
+          });
+        });
+      });
+
+      /* ---------- شارة مفتوح / مقفول (بتوقيت القاهرة) ---------- */
+      var statusEl = document.getElementById("status");
+
+      function updateStatus() {
+        try {
+          var parts = new Intl.DateTimeFormat("en-US", {
+            timeZone: "Africa/Cairo",
+            weekday: "short",
+            hour: "numeric",
+            minute: "numeric",
+            hourCycle: "h23"
+          }).formatToParts(new Date());
+          var p = {};
+          parts.forEach(function (x) { p[x.type] = x.value; });
+          var minutes = parseInt(p.hour, 10) * 60 + parseInt(p.minute, 10);
+          var opensAt = p.weekday === "Fri" ? 14 * 60 : 7 * 60;
+          var isOpen = minutes >= opensAt && minutes < 23 * 60;
+          statusEl.textContent = isOpen ? "مفتوحين دلوقتي" : "مقفولين دلوقتي";
+          statusEl.className = "status " + (isOpen ? "open" : "closed");
+        } catch (e) {
+          statusEl.textContent = "";
+        }
+      }
+      updateStatus();
+      setInterval(updateStatus, 60000);
+
+      /* ---------- السلة ---------- */
+      var qty = {};
+      var cartEl = document.getElementById("cart");
+      var totalEl = document.getElementById("cart-total");
+      var countEl = document.getElementById("cart-count");
+      var msgEl = document.getElementById("cart-msg");
+
+      items.forEach(function (li) {
+        var buy = li.querySelector(".buy");
+        var wrap = document.createElement("div");
+        wrap.className = "qty";
+        wrap.innerHTML =
+          '<button type="button" class="minus" aria-label="نقّص" disabled>−</button>' +
+          '<output aria-live="off">0</output>' +
+          '<button type="button" class="add" aria-label="زوّد">+</button>';
+        buy.appendChild(wrap);
+
+        var out = wrap.querySelector("output");
+        var minus = wrap.querySelector(".minus");
+        var name = li.querySelector("h3").textContent;
+        wrap.querySelector(".add").setAttribute("aria-label", "زوّد " + name);
+        minus.setAttribute("aria-label", "نقّص " + name);
+
+        function set(n) {
+          qty[li.dataset.id] = n;
+          out.textContent = n;
+          minus.disabled = n === 0;
+          render();
+        }
+        wrap.querySelector(".add").addEventListener("click", function () {
+          set((qty[li.dataset.id] || 0) + 1);
+        });
+        minus.addEventListener("click", function () {
+          set(Math.max(0, (qty[li.dataset.id] || 0) - 1));
+        });
+        li._reset = function () {
+          qty[li.dataset.id] = 0;
+          out.textContent = 0;
+          minus.disabled = true;
+        };
+      });
+
+      function render() {
+        var total = 0, count = 0, hasFrom = false;
+        items.forEach(function (li) {
+          var n = qty[li.dataset.id] || 0;
+          if (!n) return;
+          count += n;
+          total += n * Number(li.dataset.price);
+          if (li.dataset.from) hasFrom = true;
+        });
+
+        cartEl.hidden = count === 0;
+        document.body.classList.toggle("has-cart", count > 0);
+        if (!count) return;
+
+        totalEl.textContent = "الإجمالي: " + (hasFrom ? "من " : "") + total + " جنيه";
+        countEl.textContent = " · " + count + (count === 1 ? " عنصر" : " عناصر");
+
+        var msgs = [];
+        if (total < MIN_ORDER) msgs.push("الطلب الأقل للتوصيل " + MIN_ORDER + " جنيه");
+        if (hasFrom) msgs.push("التورتة بالحجز قبلها بيومين");
+        msgEl.textContent = msgs.join(" · ");
+      }
+
+      document.getElementById("cart-clear").addEventListener("click", function () {
+        items.forEach(function (li) { li._reset(); });
+        render();
+      });
+    })();
+  </script>
 
 </body>
 </html>
