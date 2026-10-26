@@ -218,6 +218,34 @@
     footer p { margin: 4px 0; }
     .disclaimer { font-size: 0.85rem; }
 
+    /* فورم التواصل */
+    .contact-form {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 16px;
+      display: grid;
+      gap: 14px;
+    }
+    .field label { display: block; font-weight: 600; margin-bottom: 4px; }
+    .field input,
+    .field textarea {
+      width: 100%;
+      font: inherit;
+      color: var(--text);
+      background: var(--bg);
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 10px 12px;
+      min-height: 44px;
+    }
+    .field textarea { min-height: 110px; resize: vertical; }
+    .contact-form .btn { border: 0; font: inherit; font-weight: 600; cursor: pointer; justify-self: start; }
+    .contact-form .btn:disabled { opacity: 0.6; cursor: default; }
+    .form-status { margin: 0; font-weight: 600; }
+    .form-status.ok { color: var(--ok); }
+    .form-status.err { color: var(--closed); }
+
     /* شريط السلة */
     .cart-bar {
       position: fixed;
@@ -378,6 +406,26 @@
       </dl>
     </section>
 
+    <section>
+      <h2>تواصل معانا</h2>
+      <form class="contact-form" id="contact-form">
+        <div class="field">
+          <label for="cf-name">الاسم</label>
+          <input id="cf-name" name="name" type="text" autocomplete="name" maxlength="100" required>
+        </div>
+        <div class="field">
+          <label for="cf-phone">الموبايل</label>
+          <input id="cf-phone" name="phone" type="tel" inputmode="tel" autocomplete="tel" maxlength="20" dir="ltr" required>
+        </div>
+        <div class="field">
+          <label for="cf-message">الرسالة</label>
+          <textarea id="cf-message" name="message" maxlength="1000" required></textarea>
+        </div>
+        <button class="btn" type="submit" id="cf-submit">ابعت</button>
+        <p class="form-status" id="cf-status" role="status"></p>
+      </form>
+    </section>
+
   </main>
 
   <footer>
@@ -510,6 +558,56 @@
       document.getElementById("cart-clear").addEventListener("click", function () {
         items.forEach(function (li) { li._reset(); });
         render();
+      });
+
+      /* ---------- فورم التواصل (Supabase) ---------- */
+      // المفتاح الـ publishable بس. المفتاح الـ secret ما يتحطّش هنا أبدًا.
+      var SUPABASE_URL = "https://xlxlqkxairqpannntilm.supabase.co";
+      var SUPABASE_KEY = "sb_publishable_clv1cDSjEoevnC8RVy_VzQ_faQwnN--";
+
+      var form = document.getElementById("contact-form");
+      var submitBtn = document.getElementById("cf-submit");
+      var formStatus = document.getElementById("cf-status");
+
+      function showStatus(text, kind) {
+        formStatus.textContent = text;
+        formStatus.className = "form-status " + kind;
+      }
+
+      form.addEventListener("submit", function (e) {
+        e.preventDefault();
+
+        var data = {
+          name: form.elements.name.value.trim(),
+          phone: form.elements.phone.value.trim(),
+          message: form.elements.message.value.trim()
+        };
+        if (!data.name || !data.phone || !data.message) {
+          showStatus("كل الخانات مطلوبة.", "err");
+          return;
+        }
+
+        submitBtn.disabled = true;
+        showStatus("", "");
+
+        fetch(SUPABASE_URL + "/rest/v1/messages", {
+          method: "POST",
+          headers: {
+            "apikey": SUPABASE_KEY,
+            "Content-Type": "application/json",
+            "Prefer": "return=minimal"
+          },
+          body: JSON.stringify(data)
+        }).then(function (res) {
+          if (!res.ok) throw new Error("HTTP " + res.status);
+          form.reset();
+          showStatus("وصلتنا رسالتك، هنكلّمك في نفس اليوم.", "ok");
+        }).catch(function (err) {
+          console.error("contact form:", err);
+          showStatus("حصلت مشكلة والرسالة ما اتبعتتش، جرّب تاني.", "err");
+        }).then(function () {
+          submitBtn.disabled = false;
+        });
       });
     })();
   </script>
