@@ -1,0 +1,212 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>مخبز السنبلة</title>
+  <meta name="description" content="مخبز السنبلة: عيش وحلويات طازة كل يوم، من فرننا لبيتك.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #fbf6ee;
+      --surface: #ffffff;
+      --text: #2b2118;
+      --muted: #6f5f50;
+      --accent: #b5651d;
+      --accent-dark: #8a4a12;
+      --line: #eadfce;
+      --radius: 14px;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: "Cairo", "Segoe UI", Tahoma, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.7;
+    }
+
+    .wrap {
+      max-width: 820px;
+      margin: 0 auto;
+      padding: 0 16px;
+    }
+
+    /* الهيدر */
+    header {
+      background: linear-gradient(160deg, #e9c48f 0%, #d79a52 100%);
+      text-align: center;
+      padding: 56px 0 48px;
+    }
+    header h1 {
+      margin: 0;
+      font-size: 2.2rem;
+      font-weight: 800;
+    }
+    .tagline {
+      margin: 8px 0 24px;
+      font-size: 1.15rem;
+    }
+    .btn {
+      display: inline-block;
+      background: var(--text);
+      color: #fff;
+      text-decoration: none;
+      font-weight: 600;
+      padding: 12px 28px;
+      border-radius: 999px;
+    }
+    .btn:hover, .btn:focus-visible { background: var(--accent-dark); }
+
+    /* الأقسام */
+    section { padding: 40px 0 8px; }
+    h2 {
+      font-size: 1.5rem;
+      margin: 0 0 16px;
+      color: var(--accent-dark);
+    }
+    .about { font-size: 1.1rem; margin: 0; }
+
+    /* المنتجات */
+    .products {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: grid;
+      gap: 12px;
+      grid-template-columns: 1fr;
+    }
+    .product {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 12px;
+    }
+    .product h3 { margin: 0; font-size: 1.1rem; }
+    .unit { color: var(--muted); font-size: 0.95rem; }
+    .note { display: block; color: var(--muted); font-size: 0.9rem; }
+    .price {
+      font-weight: 800;
+      color: var(--accent);
+      white-space: nowrap;
+    }
+
+    /* المواعيد والتواصل */
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 4px 16px;
+    }
+    .row {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--line);
+    }
+    .row:last-child { border-bottom: 0; }
+    .row dt { font-weight: 600; }
+    .row dd { margin: 0; text-align: left; }
+    .row a { color: var(--accent-dark); }
+
+    footer {
+      text-align: center;
+      padding: 40px 16px 32px;
+      color: var(--muted);
+    }
+    footer p { margin: 4px 0; }
+    .disclaimer { font-size: 0.85rem; }
+
+    @media (min-width: 640px) {
+      header h1 { font-size: 3rem; }
+      .products { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="wrap">
+      <h1>مخبز السنبلة</h1>
+      <p class="tagline">عيش وحلويات طازة كل يوم، من فرننا لبيتك.</p>
+      <a class="btn" href="tel:01000000000">اتصل بينا</a>
+    </div>
+  </header>
+
+  <main class="wrap">
+
+    <section>
+      <h2>مين إحنا</h2>
+      <p class="about">مخبز عيلة صغير. بنخبز كل يوم الصبح بدري، ومفيش حاجة عندنا بايتة.</p>
+    </section>
+
+    <section>
+      <h2>المنتجات والأسعار</h2>
+      <ul class="products">
+        <li class="product">
+          <div><h3>عيش فينو</h3><span class="unit">5 أرغفة</span></div>
+          <span class="price">15 جنيه</span>
+        </li>
+        <li class="product">
+          <div><h3>عيش بلدي مخصوص</h3><span class="unit">5 أرغفة</span></div>
+          <span class="price">10 جنيه</span>
+        </li>
+        <li class="product">
+          <div><h3>كرواسون سادة</h3><span class="unit">القطعة</span></div>
+          <span class="price">20 جنيه</span>
+        </li>
+        <li class="product">
+          <div><h3>كرواسون شوكولاتة</h3><span class="unit">القطعة</span></div>
+          <span class="price">28 جنيه</span>
+        </li>
+        <li class="product">
+          <div><h3>بسبوسة</h3><span class="unit">الكيلو</span></div>
+          <span class="price">160 جنيه</span>
+        </li>
+        <li class="product">
+          <div>
+            <h3>تورتة عيد ميلاد</h3>
+            <span class="unit">حسب الطلب</span>
+            <span class="note">بالحجز قبلها بيومين</span>
+          </div>
+          <span class="price">من 450 جنيه</span>
+        </li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>المواعيد</h2>
+      <dl class="card">
+        <div class="row"><dt>السبت للخميس</dt><dd>من 7 الصبح لحد 11 بالليل</dd></div>
+        <div class="row"><dt>الجمعة</dt><dd>من 2 الضهر لحد 11 بالليل</dd></div>
+      </dl>
+    </section>
+
+    <section>
+      <h2>العنوان والتواصل</h2>
+      <dl class="card">
+        <div class="row"><dt>العنوان</dt><dd>12 شارع النخيل، جنب الصيدلية</dd></div>
+        <div class="row"><dt>الموبايل</dt><dd><a href="tel:01000000000" dir="ltr">0100 000 0000</a></dd></div>
+        <div class="row"><dt>التوصيل</dt><dd>في حدود 3 كيلو، والطلب الأقل 100 جنيه</dd></div>
+        <div class="row"><dt>الدفع</dt><dd>كاش أو إنستاباي عند الاستلام</dd></div>
+      </dl>
+    </section>
+
+  </main>
+
+  <footer>
+    <p>مخبز السنبلة</p>
+    <p class="disclaimer">بيانات خيالية للتدريب: المخبز والعنوان والرقم مش حقيقيين.</p>
+  </footer>
+
+</body>
+</html>
