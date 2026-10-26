@@ -433,7 +433,7 @@
           var minutes = parseInt(p.hour, 10) * 60 + parseInt(p.minute, 10);
           var opensAt = p.weekday === "Fri" ? 14 * 60 : 7 * 60;
           var isOpen = minutes >= opensAt && minutes < 23 * 60;
-          statusEl.textContent = isOpen ? "مفتوحين دلوقتي" : "مقفولين دلوقتي";
+          statusEl.textContent = isOpen ? "فاتحين دلوقتي" : "مقفولين دلوقتي";
           statusEl.className = "status " + (isOpen ? "open" : "closed");
         } catch (e) {
           statusEl.textContent = "";
